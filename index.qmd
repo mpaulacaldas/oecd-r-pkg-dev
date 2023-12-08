@@ -1,0 +1,22 @@
+---
+title: "Developing R packages"
+subtitle: "OECD Stats Day 2023"
+author: "María Paula Caldas -- Economics Department"
+format: 
+  revealjs:
+    incremental: true
+    theme: simple
+    footer: "url@to.com"
+    logo: www/SYMBOL_20cm.png
+---
+
+## Getting up
+
+- Turn off alarm
+- Get out of bed
+
+## Going to sleep
+
+- Get in bed
+- Count sheep
+
