@@ -6,7 +6,7 @@ format:
   revealjs:
     incremental: true
     theme: simple
-    footer: "url@to.com"
+    footer: "https://mpaulacaldas.github.io/oecd-r-pkg-dev"
     logo: www/SYMBOL_20cm.png
 ---
 
