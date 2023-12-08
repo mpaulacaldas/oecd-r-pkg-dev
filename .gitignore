@@ -4,5 +4,11 @@
 .httr-oauth
 .DS_Store
 .quarto
+index.html
+index_files/
 /.quarto/
 /_site/
+
+# delete to activate github actions
+# https://quarto.org/docs/publishing/github-pages.html
+.github/
