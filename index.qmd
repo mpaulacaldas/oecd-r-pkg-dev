@@ -1,22 +1,171 @@
 ---
 title: "Developing R packages"
 subtitle: "OECD Stats Day 2023"
-author: "María Paula Caldas -- Economics Department"
+author: 
+  - name: "María Paula Caldas"
+    affiliation: 
+      - "Economics Department"
+      - "R/Python/Algobank CoP"
+# code-line-numbers: false
 format: 
   revealjs:
-    incremental: true
-    theme: simple
-    footer: "https://mpaulacaldas.github.io/oecd-r-pkg-dev"
-    logo: www/SYMBOL_20cm.png
+    incremental: false
+    theme: [simple, custom.scss]
+    css: custom.css
+    slide-number: true
+    # footer: "<https://mpaulacaldas.github.io/oecd-r-pkg-dev>"
+    # logo: www/SYMBOL_20cm.png
+workshop:
+  slides: https://mpaulacaldas.github.io/oecd-r-pkg-dev
+  project: https://posit.cloud/content/7235458
+execute: 
+  eval: false
+  echo: true
+knitr: 
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
 ---
 
-## Getting up
+## Useful links
 
-- Turn off alarm
-- Get out of bed
+\
 
-## Going to sleep
+{{< fa link >}} Slides
 
-- Get in bed
-- Count sheep
+<https://mpaulacaldas.github.io/oecd-r-pkg-dev>
 
+{{< fa folder-open >}} Posit Cloud Project
+
+<https://posit.cloud/content/7235458>
+
+
+# Introduction {background-color="#2a2e45ff"}
+
+Motivation and prerequisites
+
+## What is an R package? 
+
+A package bundles together **code**, **data**, and **documentation** in a 
+format that is **easy to share with others**
+
+```{r}
+#| code-line-numbers: "|1-2|6-8|10-12|14-16"
+#| label: ggplot2-example
+#| eval: false
+# R makes it easy to install and use packages from CRAN or other repositories
+install.packages("ggplot2")
+
+library(ggplot2)
+
+# Some packages contain data, which can be documented
+data(package = "ggplot2")
+?ggplot2::diamonds
+
+# Beyond object documentation, packages can include short articles to 
+# describe broader functionality
+vignette("ggplot2-specs")
+
+ggplot(diamonds, aes(x, y)) + 
+  geom_bin_2d(show.legend = FALSE) +
+  scale_y_log10()
+```
+
+## Why package your R code?
+
+- Makes it easy to share your code with others on your team or across the 
+  Organisation (add examples from positconf, internal from the cop)
+- Adopting a package infrastructure makes it easy for you as a developer to 
+  create more robust code (e.g. versioning, unit tests, declaring dependencies)
+- Packages also make it easier for others to use your code (e.g. function 
+  documentation, vignettes, limit namespace conflicts)
+
+## Pre-requisites
+
+- be willing!
+- know R, enough to know how to create a function (must-have)
+- know how to use Git (nice-to-have)
+- know markdown (nice-to-have)
+
+
+# Let's create a package {background-color="#2a2e45ff"  background-image="https://usethis.r-lib.org/logo.png" background-size="150px" background-position="1050px 50px"}
+
+\ 
+
+{{< fa folder-open >}} Posit Cloud Project
+
+<https://posit.cloud/content/7235458>
+
+## [1]{.circle} Set-up the basic infrastructure
+
+```{r}
+library(usethis)
+
+# OECD TIP: Use a local folder (e.g. in C:/), not one in a shared drive
+create_package("location-i-want/mypackage")
+
+# In the new R session, edit the DESCRIPTION, check(), add a LICENSE
+```
+
+## [2]{.circle} Create a function, and use it!
+
+- use_r()
+- load_all() {{< kbd Shift-Ctrl-L >}}
+- check()
+
+```{r}
+#| code-fold: true
+#| code-summary: "If you are low on inspiration..."
+year_progress <- function(date, is_leap_year = FALSE) {
+  nominator   <- as.numeric(format(date, "%j"))
+  denominator <- if (is_leap_year) 366 else 365
+  share <- round(nominator * 100 / denominator)
+  message(share, "% of the year is done!")
+}
+```
+
+## [3]{.circle} Document
+- Insert roxygen
+- document()
+
+## [📝 NEW CONCEPTS]{.tag}{background-color="#a499beff"}
+### Internal and exported functions
+
+- Optional: add a dependency
+
+## [4]{.circle} Test
+- use_test()
+- check()
+
+## [5]{.circle} Share
+- use_git() + use_algobank()
+- install()
+
+## [📝 NEW CONCEPTS]{.tag}{background-color="#a499beff"}
+### Source vs. binary
+
+## Recap
+
+# Lessons {background-color="#2a2e45ff"}
+
+## For developers
+
+- Read the book
+- Use a good style
+- UTF-8!
+- use_clean_slate()
+- dev-script
+- OECD: local version of R, local folder
+
+## For managers
+
+- Don't compound training curves
+- Pay for training, encourage training or give time for training
+- Align incentives
+- The larger the number of users, the higher the engineering bar
+- Think of governance and maintenance
+
+## Lessons from the OECD 
+
+- Eco Data Platform
+- Community of Practice, oecdverse
