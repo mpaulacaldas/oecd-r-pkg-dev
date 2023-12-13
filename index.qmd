@@ -98,31 +98,51 @@ ggplot(diamonds, aes(x, y)) +
 
 ## [1]{.circle} Set-up the basic infrastructure
 
+Let's load `{usethis}` and `{devtools}` into your global environment. These are 
+**workflow** packages. They are used interactively during package development.
+
 ```{r}
 library(usethis)
+library(devtools)
 
-# OECD TIP: Use a local folder (e.g. in C:/), not one in a shared drive
 create_package("location-i-want/mypackage")
-
-# In the new R session, edit the DESCRIPTION, check(), add a LICENSE
 ```
+
+::: {.incremental}
+
+- What happens when you run `create_package()`?
+- What files do you see?
+- Open the `DESCRIPTION` file and edit some fields.
+- Run `devtools::check()`. What do you see?
+
+:::
 
 ## [2]{.circle} Create a function, and use it!
 
-- use_r()
-- load_all() {{< kbd Shift-Ctrl-L >}}
-- check()
+\
 
-```{r}
-#| code-fold: true
-#| code-summary: "If you are low on inspiration..."
-year_progress <- function(date, is_leap_year = FALSE) {
-  nominator   <- as.numeric(format(date, "%j"))
-  denominator <- if (is_leap_year) 366 else 365
-  share <- round(nominator * 100 / denominator)
-  message(share, "% of the year is done!")
-}
-```
+::: {.incremental}
+
+- Open a file to write your function.
+  ```{r}
+  use_r("name-of-your-file")
+  ```
+
+- Write a small, simple function.
+  ```{r}
+  #| code-fold: true
+  #| code-summary: "If you are low on inspiration..."
+  year_progress <- function(date, is_leap_year = FALSE) {
+    nominator   <- as.numeric(format(date, "%j"))
+    denominator <- if (is_leap_year) 366 else 365
+    share <- round(nominator * 100 / denominator)
+    message(share, "% of the year is done!")
+  }
+  ```
+- When you are done, write `devtools::load_all()` in the console. 
+  What happens?
+
+:::
 
 ## [3]{.circle} Document
 - Insert roxygen
