@@ -73,20 +73,48 @@ ggplot(diamonds, aes(x, y)) +
 
 ## Why package your R code?
 
-- Makes it easy to share your code with others on your team or across the 
-  Organisation (add examples from positconf, internal from the cop)
-- Adopting a package infrastructure makes it easy for you as a developer to 
-  create more robust code (e.g. versioning, unit tests, declaring dependencies)
-- Packages also make it easier for others to use your code (e.g. function 
-  documentation, vignettes, limit namespace conflicts)
+It's easy for users! 
 
-## Pre-requisites
+::: {.incremental}
+  - Most already know `install.package()` and `library()`
+  - `{remotes}` makes it easy to install and build packages hosted on 
+    code sharing platforms
+  - You can publish packages to CRAN, to the [r-universe](https://r-universe.dev/) 
+    or to internal package repositories (e.g. 
+    [Sonatype Nexus](https://www.sonatype.com/products/sonatype-nexus-repository),
+    coming to the OECD)
+:::
 
-- be willing!
-- know R, enough to know how to create a function (must-have)
-- know how to use Git (nice-to-have)
-- know markdown (nice-to-have)
+## Why package your R code?
 
+As a developer, adopting a package infrastructure helps you __iterate faster__ 
+and create __more robust code__
+
+::: {.incremental}
+- Clearly stating your dependencies
+- Separating development from deployment
+- Providing a framework to create unit tests and do automated checks
+- Giving the ability to version your releases
+:::
+
+## Why package your R code?
+
+It gives you a set of tools to help people __understand__ your code and learn
+how to __interact__ with it.
+
+::: {.incremental}
+- Concise documentation of functions, data and examples
+- Vignettes, for long-form documentation
+- Automatically create package websites with `{pkgdown}`
+- Conventions to communicate `NEWS.md` and for `CONTRIBUTING.md`
+:::
+
+## What do you need to start building R packages?
+
+- Be curious and willing!
+- Enough {{< fa brands r-project >}} to create a function
+- {{< fa brands git size=lg >}} is not a must, but a very nice-to-have
+- Some markdown, to write documentation
 
 # Let's create a package {background-color="#2a2e45ff"  background-image="https://usethis.r-lib.org/logo.png" background-size="150px" background-position="1050px 50px"}
 
@@ -98,8 +126,12 @@ ggplot(diamonds, aes(x, y)) +
 
 ## [1]{.circle} Set-up the basic infrastructure
 
+::: {.notes}
 Let's load `{usethis}` and `{devtools}` into your global environment. These are 
 **workflow** packages. They are used interactively during package development.
+:::
+
+\
 
 ```{r}
 library(usethis)
@@ -112,8 +144,8 @@ create_package("location-i-want/mypackage")
 
 - What happens when you run `create_package()`?
 - What files do you see?
-- Open the `DESCRIPTION` file and edit some fields.
-- Run `devtools::check()`. What do you see?
+- Open the `DESCRIPTION` file and edit some fields
+- Run `devtools::check()` What do you see?
 
 :::
 
@@ -123,15 +155,16 @@ create_package("location-i-want/mypackage")
 
 ::: {.incremental}
 
-- Open a file to write your function.
+- Open a file to write your function
   ```{r}
   use_r("name-of-your-file")
   ```
 
-- Write a small, simple function.
+- Write a small function
   ```{r}
   #| code-fold: true
-  #| code-summary: "If you are low on inspiration..."
+  #| code-summary: "If you need a little inspiration"
+  #| label: year-progress
   year_progress <- function(date, is_leap_year = FALSE) {
     nominator   <- as.numeric(format(date, "%j"))
     denominator <- if (is_leap_year) 366 else 365
@@ -139,53 +172,148 @@ create_package("location-i-want/mypackage")
     message(share, "% of the year is done!")
   }
   ```
-- When you are done, write `devtools::load_all()` in the console and try 
-  to use your function. What happens?
+- When you are done, go to the __Console__ and type `devtools::load_all()`
+  Press ENTER. What happens?
 
 :::
 
 ## [3]{.circle} Document
-- Insert roxygen
-- document()
 
-## [📝 NEW CONCEPTS]{.tag}{background-color="#a499beff"}
-### Internal and exported functions
+\
 
-- Optional: add a dependency
+::: {.incremental}
+- Place your cursor in the body of your function
+- Navigate to __Code > Insert Roxygen Skeleton__ 
+- Fill the documentation, and save
+- In the console, run `devtools::document()`
+- See the documentation you just wrote with `?yourfun`
+:::
+
+## Internal vs. exported functions
+
+::: {.notes}
+When you add a Roxygen Skeleton to a function, it will automatically generate 
+an `@export` tag
+:::
+
+- __`@export` identifies user-facing functions__ i.e. functions available to 
+  your users when they load your library, or call a function with `::`
+
+  ```{r}
+  #| eval: false
+  usethis::create_package
+  ```
+
+- __Other functions are internal__, there to help you break down your logic 
+  into smaller functions that are easier to test, but which may not be of 
+  interest to users
+
+  ```{r}
+  # eval: false
+  usethis:::user_path_prep
+  ```
 
 ## [4]{.circle} Test
-- use_test()
-- check()
 
-## [5]{.circle} Share
-- use_git() + use_algobank()
-- install()
+\
 
-## [📝 NEW CONCEPTS]{.tag}{background-color="#a499beff"}
-### Source vs. binary
+__Unit tests__ are deliberate tests we perform whilst developing a package 
+to _monitor_ the correct functioning of our code
 
-## Recap
+::: {.incremental}
+
+- What would make a good unit test for the function below?
+  ```{r}
+  #| ref.label: year-progress
+  #| echo: true
+  #| eval: false
+  #| code-fold: false
+  ```
+- Create a test with `use_test()` and test it with `test()`
+
+:::
+
+## [5]{.circle} Install
+
+\
+
+The final step before deployment is to __install__ your package
+
+```{r}
+install()
+```
+
+If you are sharing with users, also consider increasing its __version__,  and 
+documenting the main changes in the `NEWS.md` file.
+
+```{r}
+use_news_md()
+use_version()
+```
+
+::: {.incremental}
+- Let's see how [we deploy packages in ECO](https://gitlab.algobank.oecd.org/ADB/adbthis/-/blob/PROD/_deploy.R?ref_type=heads)
+:::
+
+## Sharing with other developers
+
+\
+
+:::: {.columns}
+
+::: {.column}
+`{usethis}` makes it easy to set up __version control__
+```{r}
+use_git()
+use_github()
+```
+:::
+
+::: {.column}
+`{oecdthis}` aims to do the same for OECD staff
+
+```{r}
+use_git()
+use_algobank()
+```
+:::
+
+::::
+
+::: {.aside}
+_oecdthis_ is currently under development by Matthew de Queljoe and 
+Maria Paula Caldas
+<https://gitlab.algobank.oecd.org/rpythonalgobank/oecdthis>
+:::
 
 # Lessons {background-color="#2a2e45ff"}
 
-## For developers
+## What has been the experience in ECO?
 
-- Read the book
-- Use a good style
-- UTF-8!
-- use_clean_slate()
-- dev-script
-- OECD: local version of R, local folder
+\
 
-## For managers
+The __[ECO Data Platform](https://adbportal.oecd.org/edp/index.aspx)__ is an 
+ambitious IT project to migrate core databases and programs into 
+open-source, code-first solutions.
 
-- Don't compound training curves
-- Pay for training, encourage training or give time for training
-- Align incentives
-- The larger the number of users, the higher the engineering bar
-- Think of governance and maintenance
+A key part of this platform includes __an ecosystem of R packages__, helping 
+statisticians and analysts connect, curate and interact with our databases
 
-## Lessons from the OECD 
 
-- Eco Data Platform
-- Community of Practice, oecdverse
+## What has been the experience in ECO? {.smaller}
+
+\
+
+### Advantages of using packages
+
+- Better __documentation__ and __examples__ to statisticians
+- Better __versioning__ of code and deployment cycles.
+- Reducing __dependencies__ and NAMESPACE conflicts in analysis code
+
+### Where we are trying to improve
+
+- Defining a framework for governance and maintenance
+- Upskilling staff in Git, R and good practice
+
+# Thank you! {background-color="#2a2e45ff"}
+Any questions?

@@ -16,6 +16,19 @@
   vertical-align: middle;
 }
 
+.fa-r-project {
+  color: #2069C0;
+}
+
+.fa-git {
+  color: #FB4E23;
+}
+
+details>summary {
+  color: var(--beaver);
+  font-size: x-large;
+}
+
 /*
 Credits:
 https://github.com/emitanaka/talks/blob/master/Toronto2022/assets/custom.css
